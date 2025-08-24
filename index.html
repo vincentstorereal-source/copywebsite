@@ -1,0 +1,643 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Advanced Website Source Code Copier</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #3498db;
+            --secondary: #2ecc71;
+            --accent: #9b59b6;
+            --warning: #f39c12;
+            --danger: #e74c3c;
+            --dark: #2c3e50;
+            --light: #ecf0f1;
+            --gray: #95a5a6;
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #333;
+            line-height: 1.6;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: rgba(255, 255, 255, 0.95);
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        h1 {
+            color: var(--dark);
+            margin-bottom: 10px;
+            font-size: 2.5rem;
+        }
+        
+        .description {
+            color: var(--gray);
+            font-size: 1.1rem;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .platform-tabs {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 25px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        
+        .platform-tab {
+            padding: 12px 25px;
+            background-color: var(--light);
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .platform-tab:hover {
+            background-color: #dfe6e9;
+        }
+        
+        .platform-tab.active {
+            background-color: var(--primary);
+            color: white;
+        }
+        
+        .input-section {
+            background-color: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            margin-bottom: 25px;
+        }
+        
+        .input-group {
+            display: flex;
+            margin-bottom: 15px;
+        }
+        
+        input[type="url"] {
+            flex: 1;
+            padding: 15px;
+            border: 2px solid #ddd;
+            border-radius: 8px 0 0 8px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+        
+        input[type="url"]:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+        
+        #fetchBtn {
+            padding: 15px 25px;
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 0 8px 8px 0;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            transition: background-color 0.3s;
+        }
+        
+        #fetchBtn:hover {
+            background-color: #2980b9;
+        }
+        
+        .examples {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .example-card {
+            background-color: var(--light);
+            padding: 15px;
+            border-radius: 8px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .example-card:hover {
+            background-color: #dfe6e9;
+            transform: translateY(-3px);
+        }
+        
+        .example-card h3 {
+            margin-bottom: 8px;
+            color: var(--dark);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .result-section {
+            display: none;
+            background-color: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            margin-bottom: 25px;
+        }
+        
+        .result-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .result-title {
+            font-size: 1.2rem;
+            color: var(--dark);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .action-btn {
+            padding: 10px 15px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s;
+        }
+        
+        .copy-btn {
+            background-color: var(--secondary);
+            color: white;
+        }
+        
+        .copy-btn:hover {
+            background-color: #27ae60;
+        }
+        
+        .download-btn {
+            background-color: var(--accent);
+            color: white;
+        }
+        
+        .download-btn:hover {
+            background-color: #8e44ad;
+        }
+        
+        #result {
+            width: 100%;
+            height: 400px;
+            padding: 15px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            background-color: #f9f9f9;
+            overflow: auto;
+            white-space: pre-wrap;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+        
+        .loader {
+            display: none;
+            text-align: center;
+            margin: 30px 0;
+        }
+        
+        .loader-spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid var(--primary);
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 15px;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .error-message {
+            display: none;
+            background-color: #ffdddd;
+            color: var(--danger);
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+            border-left: 4px solid var(--danger);
+        }
+        
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 15px 25px;
+            background-color: var(--secondary);
+            color: white;
+            border-radius: 8px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s;
+            opacity: 0;
+            transform: translateY(-20px);
+            pointer-events: none;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .notification.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .disclaimer {
+            background-color: #fff8e1;
+            padding: 20px;
+            border-radius: 8px;
+            border-left: 4px solid var(--warning);
+            margin-top: 30px;
+        }
+        
+        .disclaimer h3 {
+            color: var(--warning);
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        footer {
+            text-align: center;
+            margin-top: 30px;
+            color: var(--gray);
+        }
+        
+        @media (max-width: 768px) {
+            .input-group {
+                flex-direction: column;
+            }
+            
+            input[type="url"] {
+                border-radius: 8px;
+                margin-bottom: 10px;
+            }
+            
+            #fetchBtn {
+                border-radius: 8px;
+            }
+            
+            .examples {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1><i class="fas fa-code"></i> Advanced Source Code Copier</h1>
+            <p class="description">Ambil kode sumber dari berbagai platform seperti Vercel, GitHub, GitLab, dan lainnya dengan mudah</p>
+        </header>
+        
+        <div class="platform-tabs">
+            <button class="platform-tab active" data-platform="github">
+                <i class="fab fa-github"></i> GitHub
+            </button>
+            <button class="platform-tab" data-platform="vercel">
+                <i class="fas fa-cloud"></i> Vercel
+            </button>
+            <button class="platform-tab" data-platform="gitlab">
+                <i class="fab fa-gitlab"></i> GitLab
+            </button>
+            <button class="platform-tab" data-platform="general">
+                <i class="fas fa-globe"></i> Website Umum
+            </button>
+        </div>
+        
+        <div class="input-section">
+            <div class="input-group">
+                <input type="url" id="urlInput" placeholder="Masukkan URL repository atau website..." required>
+                <button id="fetchBtn"><i class="fas fa-download"></i> Ambil Kode</button>
+            </div>
+            
+            <div class="examples">
+                <div class="example-card" data-url="https://github.com/tensorflow/tensorflow">
+                    <h3><i class="fab fa-github"></i> GitHub Example</h3>
+                    <p>https://github.com/tensorflow/tensorflow</p>
+                </div>
+                <div class="example-card" data-url="https://vercel.com/docs">
+                    <h3><i class="fas fa-cloud"></i> Vercel Example</h3>
+                    <p>https://vercel.com/docs</p>
+                </div>
+                <div class="example-card" data-url="https://gitlab.com/gitlab-org/gitlab">
+                    <h3><i class="fab fa-gitlab"></i> GitLab Example</h3>
+                    <p>https://gitlab.com/gitlab-org/gitlab</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="error-message" id="errorMessage">
+            <i class="fas fa-exclamation-circle"></i>
+            <span id="errorText"></span>
+        </div>
+        
+        <div class="loader" id="loader">
+            <div class="loader-spinner"></div>
+            <p>Sedang mengambil kode sumber...</p>
+        </div>
+        
+        <div class="result-section" id="resultSection">
+            <div class="result-header">
+                <h2 class="result-title"><i class="fas fa-file-code"></i> Kode Sumber</h2>
+                <div class="action-buttons">
+                    <button class="action-btn copy-btn" id="copyBtn">
+                        <i class="fas fa-copy"></i> Salin
+                    </button>
+                    <button class="action-btn download-btn" id="downloadBtn">
+                        <i class="fas fa-download"></i> Unduh
+                    </button>
+                </div>
+            </div>
+            <textarea id="result" readonly></textarea>
+        </div>
+        
+        <div class="disclaimer">
+            <h3><i class="fas fa-exclamation-triangle"></i> Penting untuk Diperhatikan</h3>
+            <p>Tool ini hanya bekerja untuk konten yang tersedia untuk publik. Selalu hormati lisensi kode dan hak cipta. Bewebsite mungkin memiliki perlindungan keamanan yang mencegah pengambilan kode sumber. Gunakan tool ini hanya untuk tujuan edukasi dan pembelajaran.</p>
+        </div>
+        
+        <footer>
+            <p>© 2023 Advanced Source Code Copier - Tool untuk Developer</p>
+        </footer>
+    </div>
+    
+    <div class="notification" id="notification">
+        <i class="fas fa-check-circle"></i>
+        <span>Kode sumber berhasil disalin ke clipboard!</span>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const urlInput = document.getElementById('urlInput');
+            const fetchBtn = document.getElementById('fetchBtn');
+            const copyBtn = document.getElementById('copyBtn');
+            const downloadBtn = document.getElementById('downloadBtn');
+            const result = document.getElementById('result');
+            const loader = document.getElementById('loader');
+            const errorMessage = document.getElementById('errorMessage');
+            const errorText = document.getElementById('errorText');
+            const notification = document.getElementById('notification');
+            const resultSection = document.getElementById('resultSection');
+            const platformTabs = document.querySelectorAll('.platform-tab');
+            const exampleCards = document.querySelectorAll('.example-card');
+            
+            let currentPlatform = 'github';
+            
+            // Platform tab handler
+            platformTabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    platformTabs.forEach(t => t.classList.remove('active'));
+                    tab.classList.add('active');
+                    currentPlatform = tab.dataset.platform;
+                    
+                    // Update placeholder based on platform
+                    switch(currentPlatform) {
+                        case 'github':
+                            urlInput.placeholder = 'Masukkan URL repository GitHub...';
+                            break;
+                        case 'vercel':
+                            urlInput.placeholder = 'Masukkan URL website Vercel...';
+                            break;
+                        case 'gitlab':
+                            urlInput.placeholder = 'Masukkan URL repository GitLab...';
+                            break;
+                        default:
+                            urlInput.placeholder = 'Masukkan URL website...';
+                    }
+                });
+            });
+            
+            // Example card handler
+            exampleCards.forEach(card => {
+                card.addEventListener('click', () => {
+                    urlInput.value = card.dataset.url;
+                });
+            });
+            
+            // Fetch source code
+            fetchBtn.addEventListener('click', fetchSourceCode);
+            
+            // Copy to clipboard
+            copyBtn.addEventListener('click', copyToClipboard);
+            
+            // Download code
+            downloadBtn.addEventListener('click', downloadCode);
+            
+            async function fetchSourceCode() {
+                const url = urlInput.value.trim();
+                
+                if (!url) {
+                    showError('Silakan masukkan URL website');
+                    return;
+                }
+                
+                // Validate URL format
+                try {
+                    new URL(url);
+                } catch (e) {
+                    showError('Format URL tidak valid');
+                    return;
+                }
+                
+                // Reset previous state
+                hideError();
+                result.value = '';
+                loader.style.display = 'block';
+                resultSection.style.display = 'none';
+                
+                try {
+                    let sourceCode = '';
+                    
+                    // Different approaches based on platform
+                    switch(currentPlatform) {
+                        case 'github':
+                            sourceCode = await fetchFromGitHub(url);
+                            break;
+                        case 'vercel':
+                            sourceCode = await fetchFromVercel(url);
+                            break;
+                        case 'gitlab':
+                            sourceCode = await fetchFromGitLab(url);
+                            break;
+                        default:
+                            sourceCode = await fetchFromGeneral(url);
+                    }
+                    
+                    result.value = sourceCode;
+                    resultSection.style.display = 'block';
+                } catch (error) {
+                    showError(`Error: ${error.message}`);
+                } finally {
+                    loader.style.display = 'none';
+                }
+            }
+            
+            async function fetchFromGitHub(url) {
+                // Convert GitHub URL to raw content URL
+                let rawUrl = url
+                    .replace('github.com', 'raw.githubusercontent.com')
+                    .replace('/blob/', '/');
+                
+                // If it's a repository root, try to get README
+                if (!url.includes('/blob/') && !url.includes('/tree/')) {
+                    rawUrl = url + '/master/README.md';
+                }
+                
+                const response = await fetch(`https://api.allorigins.win/get?url=${encodeURIComponent(rawUrl)}`);
+                
+                if (!response.ok) {
+                    throw new Error('Gagal mengambil data dari GitHub');
+                }
+                
+                const data = await response.json();
+                return data.contents;
+            }
+            
+            async function fetchFromVercel(url) {
+                // Use CORS proxy for Vercel sites
+                const proxyUrl = 'https://api.allorigins.win/get?url=';
+                const response = await fetch(proxyUrl + encodeURIComponent(url));
+                
+                if (!response.ok) {
+                    throw new Error('Gagal mengambil data dari Vercel');
+                }
+                
+                const data = await response.json();
+                return data.contents;
+            }
+            
+            async function fetchFromGitLab(url) {
+                // Convert GitLab URL to raw content URL
+                let rawUrl = url
+                    .replace('gitlab.com', 'gitlab.com/api/v4/projects')
+                    .replace('/', '%2F')
+                    .replace('/', '%2F') + '/repository/files/README.md/raw?ref=master';
+                
+                const response = await fetch(`https://api.allorigins.win/get?url=${encodeURIComponent(rawUrl)}`);
+                
+                if (!response.ok) {
+                    throw new Error('Gagal mengambil data dari GitLab');
+                }
+                
+                const data = await response.json();
+                return data.contents;
+            }
+            
+            async function fetchFromGeneral(url) {
+                // Use CORS proxy for general websites
+                const proxyUrl = 'https://api.allorigins.win/get?url=';
+                const response = await fetch(proxyUrl + encodeURIComponent(url));
+                
+                if (!response.ok) {
+                    throw new Error('Gagal mengambil data dari website');
+                }
+                
+                const data = await response.json();
+                return data.contents;
+            }
+            
+            function copyToClipboard() {
+                if (!result.value) {
+                    showError('Tidak ada kode sumber untuk disalin');
+                    return;
+                }
+                
+                result.select();
+                result.setSelectionRange(0, 99999);
+                
+                try {
+                    const successful = document.execCommand('copy');
+                    if (successful) {
+                        showNotification();
+                    } else {
+                        showError('Gagal menyalin ke clipboard');
+                    }
+                } catch (err) {
+                    showError('Gagal menyalin ke clipboard: ' + err);
+                }
+            }
+            
+            function downloadCode() {
+                if (!result.value) {
+                    showError('Tidak ada kode sumber untuk diunduh');
+                    return;
+                }
+                
+                const blob = new Blob([result.value], { type: 'text/plain' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'source-code.txt';
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+            }
+            
+            function showError(message) {
+                errorText.textContent = message;
+                errorMessage.style.display = 'flex';
+            }
+            
+            function hideError() {
+                errorMessage.style.display = 'none';
+            }
+            
+            function showNotification() {
+                notification.classList.add('show');
+                setTimeout(() => {
+                    notification.classList.remove('show');
+                }, 3000);
+            }
+        });
+    </script>
+</body>
+</html>
